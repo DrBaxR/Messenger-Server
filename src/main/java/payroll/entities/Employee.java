@@ -1,4 +1,4 @@
-package payroll;
+package payroll.entities;
 
 import java.util.Objects;
 
@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
+public
 class Employee {
 
     private @Id @GeneratedValue String id;

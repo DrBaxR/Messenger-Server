@@ -59,6 +59,7 @@ public class GroupController {
 
     //TODO: make this give the actual messages, not only the IDs
     @GetMapping("/groups/{id}/messages")
+
     List<Message> allGroupMessages(@PathVariable String id) {
         Group group = repository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));

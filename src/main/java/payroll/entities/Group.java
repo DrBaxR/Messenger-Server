@@ -15,6 +15,7 @@ public class Group {
     private List<String> users;
 
     @ElementCollection
+
     private List<Message> messages;
 
     public Group() {

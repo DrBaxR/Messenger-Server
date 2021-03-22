@@ -1,6 +1,7 @@
 package payroll.controllers;
 
 import org.springframework.web.bind.annotation.*;
+import payroll.entities.Message;
 import payroll.exceptions.GroupNotFoundException;
 import payroll.repositories.GroupRepository;
 import payroll.entities.Group;
@@ -58,7 +59,7 @@ public class GroupController {
 
     //TODO: make this give the actual messages, not only the IDs
     @GetMapping("/groups/{id}/messages")
-    List<String> allGroupMessages(@PathVariable String id) {
+    List<Message> allGroupMessages(@PathVariable String id) {
         Group group = repository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
@@ -66,7 +67,7 @@ public class GroupController {
     }
 
     @PostMapping("/groups/{id}/messages")
-    String addGroupMessage(@RequestBody String message, @PathVariable String id) {
+    Message addGroupMessage(@RequestBody Message message, @PathVariable String id) {
         // getting the group must be done first or else a message would be created even if the group does not exist
         Group group = repository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));

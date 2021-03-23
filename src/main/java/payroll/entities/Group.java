@@ -72,7 +72,7 @@ public class Group {
                 '}';
     }
 
-    public void addMessage(Message message) {
+    public void addMessage(String message) {
         this.messages.add(message);
     }
 

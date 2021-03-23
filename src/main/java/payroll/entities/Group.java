@@ -71,8 +71,8 @@ public class Group {
                 '}';
     }
 
-    public void addMessage(String messageId) {
-        this.messages.add(messageId);
+    public void addMessage(String message) {
+        this.messages.add(message);
     }
 
     public void addUser(String userId) {

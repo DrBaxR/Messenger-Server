@@ -2,6 +2,7 @@ package payroll.controllers;
 
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
+import payroll.entities.Message;
 import payroll.exceptions.GroupNotFoundException;
 import payroll.other.GroupModelAssembler;
 import payroll.repositories.GroupRepository;

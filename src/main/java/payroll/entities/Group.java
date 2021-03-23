@@ -15,12 +15,13 @@ public class Group {
     private List<String> users;
 
     @ElementCollection
-    private List<String> messages;
+
+    private List<Message> messages;
 
     public Group() {
     }
 
-    public Group(List<String> users, List<String> messages) {
+    public Group(List<String> users, List<Message> messages) {
         this.users = users;
         this.messages = messages;
     }
@@ -33,11 +34,11 @@ public class Group {
         this.users = users;
     }
 
-    public List<String> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<String> messages) {
+    public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
 

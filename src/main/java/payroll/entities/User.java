@@ -12,15 +12,18 @@ import java.util.Objects;
 public
 class User {
 
-
-
     private @Id @GeneratedValue String id;
 
     private String username;
+
     private String email;
+
     private String password;
+
     @ElementCollection
     private List<String> groups;
+
+    public User(){ }
 
     public User(String id, String username, String email, String password, List<String> groups) {
         this.id = id;
@@ -28,6 +31,10 @@ class User {
         this.email = email;
         this.password = password;
         this.groups = groups;
+    }
+
+    public void addGroup(String groupId){
+        this.groups.add(groupId);
     }
 
 
@@ -71,6 +78,12 @@ class User {
     public void setGroups(List<String> groups) {
         this.groups = groups;
     }
+//    public String getOneGroup(String id){
+//        for(String g : groups)
+//        {
+//
+//        }
+//    }
 
     @Override
     public int hashCode() {
@@ -91,10 +104,14 @@ class User {
 
     }
 
-    //TODO: group info
     @Override
     public String toString() {
-        return "User{" + "id=" + this.id + ", username='" + this.username + '\'' + ", email='" + this.email
-                + '\'' +", password='" +  this.password + '\'' + ", groups='" + this.groups + '\'' + '}';
+        return "User{"
+                + "id=" + this.id + '\''
+                +", username='" + this.username + '\''
+                + ", email='" + this.email + '\''
+                +", password='" +  this.password + '\''
+                + ", groups='" + this.groups + '\''
+                + '}';
     }
 }

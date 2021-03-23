@@ -9,6 +9,7 @@ import payroll.exceptions.UserNotFoundException;
 
 @ControllerAdvice
 public class UserNotFoundAdvice {
+
     @ResponseBody
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

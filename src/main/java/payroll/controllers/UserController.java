@@ -5,7 +5,9 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import payroll.entities.Group;
 import payroll.entities.User;
+import payroll.exceptions.GroupNotFoundException;
 import payroll.exceptions.UserNotFoundException;
 import payroll.other.UserModelAssembler;
 import payroll.repositories.UserRepository;
@@ -71,9 +73,35 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    void deleteUser(@PathVariable String id){
+    public void deleteUser(@PathVariable String id){
+        if(!userRepository.existsById(id))
+            throw new UserNotFoundException(id);
+
         userRepository.deleteById(id);
     }
+
+
+    //TODO: Heavy load from there: get user's actual groups
+
+    @GetMapping("/users/{id}/groups")
+    public List<String> allGroups(@PathVariable String id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        return user.getGroups();
+    }
+
+   @PostMapping("/users/{id}/groups")
+   public String addGroup(@RequestBody String group, @PathVariable String id)
+   {
+       User user = userRepository.findById(id)
+               .orElseThrow(() -> new UserNotFoundException(id));
+
+       user.addGroup(group);
+       userRepository.save(user);
+
+       return group;
+   }
 
 
 }

@@ -75,7 +75,15 @@ public class Group {
         this.messages.add(message);
     }
 
+    public void removeMessage(String message) {
+        this.messages.remove(message);
+    }
+
     public void addUser(String userId) {
         this.users.add(userId);
     }
-}
+
+    public void removeUser(String userId) {
+        this.users.remove(userId);
+
+    }}

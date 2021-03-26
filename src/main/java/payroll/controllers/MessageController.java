@@ -2,7 +2,9 @@ package payroll.controllers;
 
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
+import payroll.entities.Group;
 import payroll.entities.Message;
+import payroll.exceptions.GroupNotFoundException;
 import payroll.exceptions.MessageNotFoundException;
 import payroll.other.MessageModelAssembler;
 import payroll.repositories.MessageRepository;
@@ -33,9 +35,11 @@ public class MessageController {
     }
 
     @GetMapping("/messages/{id}")
-    public Message getMessageById(@PathVariable String id){
-        return  repository.findById(id)
-                .orElseThrow(() -> new MessageNotFoundException(id));
+    public EntityModel<Message> getMessageById(@PathVariable String id){
+        Message message = repository.findById(id)
+                .orElseThrow(() -> new GroupNotFoundException(id));
+
+        return assembler.toModel(message);
     }
     @DeleteMapping("/messages/{id}")
     void deleteMessageById(@PathVariable String id){

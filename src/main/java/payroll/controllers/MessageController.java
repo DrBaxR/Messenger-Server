@@ -1,23 +1,30 @@
 package payroll.controllers;
 
+import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 import payroll.entities.Message;
 import payroll.exceptions.MessageNotFoundException;
+import payroll.other.MessageModelAssembler;
 import payroll.repositories.MessageRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class MessageController {
 
 
     private final MessageRepository repository;
-    public MessageController(MessageRepository repository) {
+    private final MessageModelAssembler assembler;
+    public MessageController(MessageRepository repository, MessageModelAssembler assembler) {
         this.repository = repository;
+        this.assembler = assembler;
     }
 
     @GetMapping("/messages")
-    List<Message> allMessages() {
-        return repository.findAll();
+    public List<EntityModel<Message>> allMessages() {
+        return repository.findAll().stream()
+                .map(assembler::toModel)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/messages")
@@ -26,7 +33,7 @@ public class MessageController {
     }
 
     @GetMapping("/messages/{id}")
-    Message getMessageById(@PathVariable String id){
+    public Message getMessageById(@PathVariable String id){
         return  repository.findById(id)
                 .orElseThrow(() -> new MessageNotFoundException(id));
     }

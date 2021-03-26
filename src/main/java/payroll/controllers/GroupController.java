@@ -3,10 +3,13 @@ package payroll.controllers;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 import payroll.entities.Message;
+import payroll.entities.User;
 import payroll.exceptions.GroupNotFoundException;
 import payroll.other.GroupModelAssembler;
 import payroll.repositories.GroupRepository;
 import payroll.entities.Group;
+import payroll.repositories.MessageRepository;
+import payroll.repositories.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,29 +17,34 @@ import java.util.stream.Collectors;
 @RestController
 public class GroupController {
 
-    private final GroupRepository repository;
+    private final GroupRepository groupRepository;
+    private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
+
     private final GroupModelAssembler assembler;
 
-    public GroupController(GroupRepository repository, GroupModelAssembler assembler) {
-        this.repository = repository;
+    public GroupController(GroupRepository groupRepository, MessageRepository messageRepository, UserRepository userRepository, GroupModelAssembler assembler) {
+        this.groupRepository = groupRepository;
+        this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
         this.assembler = assembler;
     }
 
     @GetMapping("/groups")
     public List<EntityModel<Group>> allGroups() {
-        return repository.findAll().stream()
+        return groupRepository.findAll().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
     }
 
     @PostMapping("/groups")
     public EntityModel<Group> newGroup(@RequestBody Group group) {
-        return assembler.toModel(repository.save(group));
+        return assembler.toModel(groupRepository.save(group));
     }
 
     @GetMapping("/groups/{id}")
     public EntityModel<Group> oneGroup(@PathVariable String id) {
-        Group group = repository.findById(id)
+        Group group = groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
         return assembler.toModel(group);
@@ -44,70 +52,102 @@ public class GroupController {
 
     @PutMapping("/groups/{id}")
     public EntityModel<Group> replaceGroup(@RequestBody Group newGroup, @PathVariable String id) {
-        return repository.findById(id)
+        return groupRepository.findById(id)
                 .map(group -> {
-                    group.setMessages(newGroup.getMessages());
-                    group.setUsers(newGroup.getUsers());
+                    if(newGroup.getMessages() != null)
+                        group.setMessages(newGroup.getMessages());
 
-                    return assembler.toModel(repository.save(group));
+                    if(newGroup.getUsers() != null)
+                        group.setUsers(newGroup.getUsers());
+
+                    return assembler.toModel(groupRepository.save(group));
                 })
                 .orElseGet(() -> {
                     newGroup.setId(id);
-                    return assembler.toModel(repository.save(newGroup));
+                    return assembler.toModel(groupRepository.save(newGroup));
                 });
     }
 
     @DeleteMapping("/groups/{id}")
     public void deleteGroup(@PathVariable String id) {
-        if (!repository.existsById(id))
+        if (!groupRepository.existsById(id))
             throw new GroupNotFoundException(id);
 
-        repository.deleteById(id);
+        groupRepository.deleteById(id);
     }
 
-    //TODO: make this give the actual messages, not only the IDs
     @GetMapping("/groups/{id}/messages")
-    public List<String> allGroupMessages(@PathVariable String id) {
-        Group group = repository.findById(id)
+    public List<Message> allGroupMessages(@PathVariable String id) {
+        Group group = groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
-        return group.getMessages();
+        List<Message> messages = group.getMessages().stream()
+                .map(mId -> messageRepository.findById(mId).orElseGet(() -> {
+                    group.removeMessage(mId);
+                    groupRepository.save(group);
+
+                    return null;
+                }))
+                .collect(Collectors.toList());
+
+        return messages;
     }
 
     @PostMapping("/groups/{id}/messages")
-    public String addGroupMessage(@RequestBody String message, @PathVariable String id) {
-        Group group = repository.findById(id)
+    public Message addGroupMessage(@RequestBody Message message, @PathVariable String id) {
+        Group group = groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
-        // TODO: actually create the new message in the database (you will have to change the bodyParam to type message)
-        // KEEP IN MIND: some message ids could no longer be valid (they were deleted)
-        group.addMessage(message);
-        repository.save(group);
+        Message newMessage = messageRepository.save(message);
+        group.addMessage(newMessage.getId());
 
-        return message;
+        groupRepository.save(group);
+
+        return newMessage;
     }
 
-    // TODO: same thing that were noted for messages
     @GetMapping("/groups/{id}/users")
-    public List<String> allGroupUsers(@PathVariable String id) {
-        Group group = repository.findById(id)
+    public List<User> allGroupUsers(@PathVariable String id) {
+        Group group = groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
-        return group.getUsers();
+        List<User> users = group.getUsers().stream()
+                .map(uId -> userRepository.findById(uId).orElseGet(() -> {
+                    group.removeUser(uId);
+                    groupRepository.save(group);
+
+                    return null;
+                }))
+                .collect(Collectors.toList());
+
+        return users;
     }
 
     @PostMapping("/groups/{id}/users")
-    public String addGroupUser(@RequestBody String user, @PathVariable String id) {
-        // get the group
-        Group group = repository.findById(id)
+    public User addGroupUser(@RequestBody User user, @PathVariable String id) {
+        Group group = groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
-        // TODO:
+        if(!user.getGroups().contains(group.getId()))
+            user.addGroup(group.getId());
+        User newUser = userRepository.save(user);
+        group.addUser(newUser.getId());
 
-        // update the group
-        group.addUser(user);
-        repository.save(group);
+        groupRepository.save(group);
 
-        return user;
+        return newUser;
+    }
+
+    @PutMapping("/groups/{id}/users")
+    public List<User> updateUsers(@RequestBody List<String> userIds, @PathVariable String id) {
+        Group group = groupRepository.findById(id)
+                .orElseThrow(() -> new GroupNotFoundException(id));
+
+        if(userIds != null) {
+            group.setUsers(userIds);
+            groupRepository.save(group);
+        }
+
+        return allGroupUsers(id);
     }
 }

@@ -1,5 +1,7 @@
 package messenger.controllers;
 
+import messenger.entities.Group;
+import messenger.repositories.GroupRepository;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -20,10 +22,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
     private final UserModelAssembler userAssembler;
 
-    UserController(UserRepository userRepository, UserModelAssembler userAssembler){
+    UserController(UserRepository userRepository, GroupRepository groupRepository, UserModelAssembler userAssembler){
         this.userRepository = userRepository;
+        this.groupRepository = groupRepository;
         this.userAssembler = userAssembler;
     }
 
@@ -38,12 +42,9 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    ResponseEntity<?> newUser(@RequestBody User newUser){
-        EntityModel<User> userEntityModel = userAssembler.toModel(userRepository.save(newUser));
+    public EntityModel<User> newUser(@RequestBody User user){
+        return userAssembler.toModel(userRepository.save(user));
 
-        return ResponseEntity
-                .created(userEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(userEntityModel);
     }
 
     @GetMapping("/users/{id}")
@@ -82,23 +83,33 @@ public class UserController {
     //TODO: Heavy load from there: get user's actual groups
 
     @GetMapping("/users/{id}/groups")
-    public List<String> allGroups(@PathVariable String id){
+    public List<Group> allGroups(@PathVariable String id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        return user.getGroups();
+        List<Group> groups = user.getGroups().stream()
+                .map(groupId -> groupRepository.findById(groupId).orElseGet(() -> {
+                    user.removeGroup(groupId);
+                    userRepository.save(user);
+
+                    return null;
+                }))
+                .collect(Collectors.toList());
+
+        return groups;
     }
 
    @PostMapping("/users/{id}/groups")
-   public String addGroup(@RequestBody String group, @PathVariable String id)
+   public Group addGroup(@RequestBody Group group, @PathVariable String id)
    {
        User user = userRepository.findById(id)
                .orElseThrow(() -> new UserNotFoundException(id));
 
-       user.addGroup(group);
+       Group newGroup = groupRepository.save(group);
+       user.addGroup(newGroup.getId());
        userRepository.save(user);
 
-       return group;
+       return newGroup;
    }
 
 

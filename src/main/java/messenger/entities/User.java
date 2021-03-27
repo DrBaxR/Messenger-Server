@@ -1,6 +1,8 @@
 package messenger.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,7 +39,9 @@ class User {
         this.groups.add(groupId);
     }
 
-
+    public void removeGroup(String group){
+        this.groups.remove(group);
+    }
 
     public String getId() {
         return id;
@@ -78,12 +82,6 @@ class User {
     public void setGroups(List<String> groups) {
         this.groups = groups;
     }
-//    public String getOneGroup(String id){
-//        for(String g : groups)
-//        {
-//
-//        }
-//    }
 
     @Override
     public int hashCode() {

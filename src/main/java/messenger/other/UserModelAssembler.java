@@ -1,10 +1,10 @@
-package payroll.other;
+package messenger.other;
 
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
-import payroll.controllers.UserController;
-import payroll.entities.User;
+import messenger.controllers.UserController;
+import messenger.entities.User;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;

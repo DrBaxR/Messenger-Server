@@ -1,7 +1,7 @@
-package payroll.repositories;
+package messenger.repositories;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import payroll.entities.User;
+import messenger.entities.User;
 
 public interface UserRepository extends MongoRepository<User, String> {
 }

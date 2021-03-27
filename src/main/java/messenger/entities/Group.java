@@ -1,4 +1,4 @@
-package payroll.entities;
+package messenger.entities;
 
 import javax.persistence.*;
 import java.util.List;

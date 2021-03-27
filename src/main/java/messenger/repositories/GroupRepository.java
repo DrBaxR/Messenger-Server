@@ -1,7 +1,7 @@
-package payroll.repositories;
+package messenger.repositories;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import payroll.entities.Group;
+import messenger.entities.Group;
 
 public interface GroupRepository extends MongoRepository<Group, String> {
 }

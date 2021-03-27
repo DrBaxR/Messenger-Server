@@ -1,19 +1,20 @@
-package payroll.exceptions.advice;
+package messenger.exceptions.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import payroll.exceptions.EmployeeNotFoundException;
+import messenger.exceptions.UserNotFoundException;
 
 @ControllerAdvice
-public class EmployeeNotFoundAdvice {
+public class UserNotFoundAdvice {
 
     @ResponseBody
-    @ExceptionHandler(EmployeeNotFoundException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String employeeNotFoundHandler(EmployeeNotFoundException ex) {
-        return ex.getMessage();
+    String userNotFoundHandler(UserNotFoundException e){
+        return e.getMessage();
     }
+
 }

@@ -1,15 +1,15 @@
-package payroll.controllers;
+package messenger.controllers;
 
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
-import payroll.entities.Message;
-import payroll.entities.User;
-import payroll.exceptions.GroupNotFoundException;
-import payroll.other.GroupModelAssembler;
-import payroll.repositories.GroupRepository;
-import payroll.entities.Group;
-import payroll.repositories.MessageRepository;
-import payroll.repositories.UserRepository;
+import messenger.entities.Message;
+import messenger.entities.User;
+import messenger.exceptions.GroupNotFoundException;
+import messenger.other.GroupModelAssembler;
+import messenger.repositories.GroupRepository;
+import messenger.entities.Group;
+import messenger.repositories.MessageRepository;
+import messenger.repositories.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

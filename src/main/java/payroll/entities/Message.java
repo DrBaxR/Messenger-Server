@@ -57,5 +57,12 @@ public class Message {
         this.sender = sender;
     }
 
-
+    @Override
+    public String toString() {
+        return "Message{" +
+                "text='" + text + '\'' +
+                ", date='" + date + '\'' +
+                ", sender='" + sender + '\'' +
+                '}';
+    }
 }

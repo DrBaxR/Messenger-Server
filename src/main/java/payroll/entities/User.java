@@ -1,20 +1,16 @@
 package payroll.entities;
 
 
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-
 import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
-@Document(collection = "user")
-public class User {
+@Entity
+public
+class User {
 
     private @Id @GeneratedValue String id;
 
@@ -27,12 +23,10 @@ public class User {
     @ElementCollection
     private List<String> groups;
 
-    @DBRef
-    private Set<Role> roles = new HashSet<>();
-
     public User(){ }
 
-    public User(String username, String email, String password, List<String> groups) {
+    public User(String id, String username, String email, String password, List<String> groups) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -43,13 +37,7 @@ public class User {
         this.groups.add(groupId);
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 
     public String getId() {
         return id;

@@ -1,6 +1,7 @@
 package messenger.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,10 +13,10 @@ public class Group {
     private String id;
 
     @ElementCollection
-    private List<String> users;
+    private List<String> users = new ArrayList();
 
     @ElementCollection
-    private List<String> messages;
+    private List<String> messages = new ArrayList();
 
     public Group() {
     }

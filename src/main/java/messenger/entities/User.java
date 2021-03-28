@@ -7,6 +7,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,7 +24,7 @@ class User {
     private String password;
 
     @ElementCollection
-    private List<String> groups;
+    private List<String> groups = new ArrayList();
 
     public User(){ }
 

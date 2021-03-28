@@ -11,6 +11,8 @@ public class Group {
     @GeneratedValue
     private String id;
 
+    private String name;
+
     @ElementCollection
     private List<String> users;
 
@@ -20,7 +22,7 @@ public class Group {
     public Group() {
     }
 
-    public Group(List<String> users, List<String> messages) {
+    public Group(List<String> users, List<String> messages, String name) {
         this.users = users;
         this.messages = messages;
     }
@@ -47,6 +49,14 @@ public class Group {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

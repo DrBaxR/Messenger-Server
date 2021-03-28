@@ -2,7 +2,6 @@ package payroll.entities;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
 
 @Entity
 public class Message {

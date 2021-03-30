@@ -3,17 +3,21 @@ package messenger.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+
 import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
-@Entity
-public
-class User {
+@Document(collection = "user")
+public class User {
 
     private @Id @GeneratedValue String id;
 
@@ -26,10 +30,12 @@ class User {
     @ElementCollection
     private List<String> groups = new ArrayList();
 
+    @DBRef
+    private Set<Role> roles = new HashSet<>();
+
     public User(){ }
 
-    public User(String id, String username, String email, String password, List<String> groups) {
-        this.id = id;
+    public User(String username, String email, String password, List<String> groups) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -42,6 +48,13 @@ class User {
 
     public void removeGroup(String group){
         this.groups.remove(group);
+    }
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public String getId() {

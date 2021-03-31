@@ -18,6 +18,6 @@ public class GroupModelAssembler implements RepresentationModelAssembler<Group, 
                 linkTo(methodOn(GroupController.class).oneGroup(group.getId())).withSelfRel(),
                 linkTo(methodOn(GroupController.class).allGroups()).withRel("groups"),
                 linkTo(methodOn(GroupController.class).allGroupUsers(group.getId())).withRel("users"),
-                linkTo(methodOn(GroupController.class).allGroupMessages(group.getId())).withRel("messages"));
+                linkTo(methodOn(GroupController.class).allGroupMessages(group.getId(), 0, 20)).withRel("messages"));
     }
 }

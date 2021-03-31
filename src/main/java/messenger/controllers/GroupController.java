@@ -54,10 +54,10 @@ public class GroupController {
     public EntityModel<Group> replaceGroup(@RequestBody Group newGroup, @PathVariable String id) {
         return groupRepository.findById(id)
                 .map(group -> {
-                    if(newGroup.getMessages() != null)
+                    if (newGroup.getMessages() != null)
                         group.setMessages(newGroup.getMessages());
 
-                    if(newGroup.getUsers() != null)
+                    if (newGroup.getUsers() != null)
                         group.setUsers(newGroup.getUsers());
 
                     return assembler.toModel(groupRepository.save(group));
@@ -77,11 +77,18 @@ public class GroupController {
     }
 
     @GetMapping("/groups/{id}/messages")
-    public List<Message> allGroupMessages(@PathVariable String id) {
+    public List<Message> allGroupMessages(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
         Group group = groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
-        List<Message> messages = group.getMessages().stream()
+        List<String> messageIds = group.getMessages();
+        int startIndex = Math.min(page*size, messageIds.size());
+        int endIndex = Math.min(page*size + size, messageIds.size());
+
+        return messageIds.subList(startIndex, endIndex).stream()
                 .map(mId -> messageRepository.findById(mId).orElseGet(() -> {
                     group.removeMessage(mId);
                     groupRepository.save(group);
@@ -89,8 +96,6 @@ public class GroupController {
                     return null;
                 }))
                 .collect(Collectors.toList());
-
-        return messages;
     }
 
     @PostMapping("/groups/{id}/messages")
@@ -128,7 +133,7 @@ public class GroupController {
         Group group = groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
-        if(!user.getGroups().contains(group.getId()))
+        if (!user.getGroups().contains(group.getId()))
             user.addGroup(group.getId());
         User newUser = userRepository.save(user);
         group.addUser(newUser.getId());
@@ -143,7 +148,7 @@ public class GroupController {
         Group group = groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
-        if(userIds != null) {
+        if (userIds != null) {
             group.setUsers(userIds);
             groupRepository.save(group);
         }

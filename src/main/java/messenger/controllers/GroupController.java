@@ -12,6 +12,7 @@ import messenger.entities.Group;
 import messenger.repositories.MessageRepository;
 import messenger.repositories.UserRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,6 +88,7 @@ public class GroupController {
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
         List<String> messageIds = group.getMessages();
+        Collections.reverse(messageIds);
         int startIndex = Math.min(page*size, messageIds.size());
         int endIndex = Math.min(page*size + size, messageIds.size());
 

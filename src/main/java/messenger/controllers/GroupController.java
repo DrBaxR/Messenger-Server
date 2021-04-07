@@ -1,5 +1,6 @@
 package messenger.controllers;
 
+import messenger.exceptions.UserNotFoundException;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 import messenger.entities.Message;
@@ -130,18 +131,24 @@ public class GroupController {
     }
 
     @PostMapping("/groups/{id}/users")
-    public User addGroupUser(@RequestBody User user, @PathVariable String id) {
+    public User addGroupUser(@RequestBody String userId, @PathVariable String id) {
         Group group = groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
-        if (!user.getGroups().contains(group.getId()))
-            user.addGroup(group.getId());
-        User newUser = userRepository.save(user);
-        group.addUser(newUser.getId());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
-        groupRepository.save(group);
+        if(!user.getGroups().contains(id)) {
+            user.addGroup(id);
+            user = userRepository.save(user);
+        }
 
-        return newUser;
+        if(!group.getUsers().contains(userId)) {
+            group.addUser(userId);
+            groupRepository.save(group);
+        }
+
+        return user;
     }
 
     @PutMapping("/groups/{id}/users")

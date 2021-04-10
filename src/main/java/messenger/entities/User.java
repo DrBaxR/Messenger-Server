@@ -28,7 +28,7 @@ public class User {
     private String password;
 
     @ElementCollection
-    private List<String> groups = new ArrayList();
+    private List<String> groups;
 
     @DBRef
     private Set<Role> roles = new HashSet<>();

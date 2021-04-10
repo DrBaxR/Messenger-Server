@@ -1,11 +1,14 @@
 package messenger.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@JsonIgnoreProperties(value = { "messages", "users" })
 public class Group {
 
     @Id

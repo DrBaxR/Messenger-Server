@@ -57,18 +57,22 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    User replaceUser(@RequestBody User newUser, @PathVariable() String id){
+    public EntityModel<User> replaceUser(@RequestBody User newUser, @PathVariable() String id){
         return userRepository.findById(id)
                 .map(user -> {
-                    user.setEmail(newUser.getEmail());
-                    user.setUsername(newUser.getUsername());
-                    user.setPassword(newUser.getPassword());
-                    user.setGroups(newUser.getGroups());
-                    return userRepository.save(user);
+                    if(newUser.getEmail() != null)
+                        user.setEmail(newUser.getEmail());
+                    if(newUser.getUsername() != null)
+                        user.setUsername(newUser.getUsername());
+                    if(newUser.getPassword() != null)
+                        user.setPassword(newUser.getPassword());
+                    if(newUser.getGroups() != null)
+                        user.setGroups(newUser.getGroups());
+                    return userAssembler.toModel(userRepository.save(user));
                 })
                 .orElseGet(() -> {
                     newUser.setId(id);
-                    return userRepository.save(newUser);
+                    return userAssembler.toModel(userRepository.save(newUser));
                 });
     }
 
@@ -79,9 +83,6 @@ public class UserController {
 
         userRepository.deleteById(id);
     }
-
-
-    //TODO: Heavy load from there: get user's actual groups
 
     @GetMapping("/users/{id}/groups")
     public List<Group> allGroups(@PathVariable String id){

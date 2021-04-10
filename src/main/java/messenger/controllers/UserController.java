@@ -106,6 +106,7 @@ public class UserController {
        User user = userRepository.findById(id)
                .orElseThrow(() -> new UserNotFoundException(id));
 
+       group.addUser(id);
        Group newGroup = groupRepository.save(group);
        user.addGroup(newGroup.getId());
        userRepository.save(user);

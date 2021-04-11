@@ -133,20 +133,22 @@ public class GroupController {
     }
 
     @PostMapping("/groups/{id}/users")
-    public User addGroupUser(@RequestBody String userId, @PathVariable String id) {
+    public User addGroupUser(@RequestBody String userEmail, @PathVariable String id) {
         Group group = groupRepository.findById(id)
                 .orElseThrow(() -> new GroupNotFoundException(id));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+        User user = userRepository.findByEmail(userEmail);
+
+        if(user == null)
+            throw new UserNotFoundException(userEmail);
 
         if(!user.getGroups().contains(id)) {
             user.addGroup(id);
             user = userRepository.save(user);
         }
 
-        if(!group.getUsers().contains(userId)) {
-            group.addUser(userId);
+        if(!group.getUsers().contains(user.getId())) {
+            group.addUser(user.getId());
             groupRepository.save(group);
         }
 

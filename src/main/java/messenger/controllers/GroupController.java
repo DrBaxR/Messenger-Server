@@ -73,8 +73,17 @@ public class GroupController {
 
     @DeleteMapping("/groups/{id}")
     public void deleteGroup(@PathVariable String id) {
-        if (!groupRepository.existsById(id))
-            throw new GroupNotFoundException(id);
+        Group group = groupRepository.findById(id)
+                .orElseThrow(() -> new GroupNotFoundException(id));
+
+        group.getMessages().forEach(messageRepository::deleteById);
+
+        group.getUsers().forEach(userId -> {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new UserNotFoundException(userId));
+            user.removeGroup(id);
+            userRepository.save(user);
+        });
 
         groupRepository.deleteById(id);
     }

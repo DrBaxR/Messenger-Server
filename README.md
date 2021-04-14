@@ -14,7 +14,7 @@ After doing all that, you can finally start the server by navigating to the root
 
 Alternatively, if you have [Maven](https://maven.apache.org/download.cgi) installed on your machine, you can just run ```mvn spring-boot:run```.
 
-**From version v1.3.0: ** You must also create two environment variables (```MESSENGER_SERVER_EMAIL``` and ```MESSENGER_EMAIL_PASSWORD```). These two variables represent a gmail account from which the server will send emails to users that forgot their password. In case you run into any problems with the credentials, please read [this](https://support.google.com/mail/answer/7126229?visit_id=637540027062990845-726287386&rd=1) and make sure you follow the steps described.
+**From version v1.3.0:** You must also create two environment variables (```MESSENGER_SERVER_EMAIL``` and ```MESSENGER_EMAIL_PASSWORD```). These two variables represent a gmail account from which the server will send emails to users that forgot their password. In case you run into any problems with the credentials, please read [this](https://support.google.com/mail/answer/7126229?visit_id=637540027062990845-726287386&rd=1) and make sure you follow the steps described.
 
 # Contributing
 In case you want to contribute to the development of this project, you will first need to fork this repository by clicking on the _Fork_ button that appears in the top right corner of this page. 

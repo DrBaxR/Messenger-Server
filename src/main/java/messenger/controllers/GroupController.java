@@ -1,6 +1,8 @@
 package messenger.controllers;
 
 import messenger.exceptions.UserNotFoundException;
+import messenger.mail.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 import messenger.entities.Message;
@@ -25,6 +27,9 @@ public class GroupController {
     private final UserRepository userRepository;
 
     private final GroupModelAssembler assembler;
+
+    @Autowired
+    private EmailService emailService;
 
     public GroupController(GroupRepository groupRepository, MessageRepository messageRepository, UserRepository userRepository, GroupModelAssembler assembler) {
         this.groupRepository = groupRepository;

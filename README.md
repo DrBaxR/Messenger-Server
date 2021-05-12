@@ -16,6 +16,8 @@ Alternatively, if you have [Maven](https://maven.apache.org/download.cgi) instal
 
 **From version v1.3.0:** You must also create two environment variables (```MESSENGER_SERVER_EMAIL``` and ```MESSENGER_SERVER_PASSWORD```). These two variables represent a gmail account from which the server will send emails to users that forgot their password. In case you run into any problems with the credentials, please read [this](https://support.google.com/mail/answer/7126229?visit_id=637540027062990845-726287386&rd=1) and make sure you follow the steps described.
 
+**From version v1.3.2:** Environment variables for ```MESSENGER_SERVER_EMAIL``` and ```MESSENGER_SERVER_PASSWORD``` are no longer needed. They were replaced with one called ```SENDGRID_KEY```. Also, an URL for connecting to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/lp/try2?utm_source=google&utm_campaign=gs_emea_romania_search_core_brand_atlas_desktop&utm_term=mongo%20atlas&utm_medium=cpc_paid_search&utm_ad=e&utm_ad_campaign_id=12212624554&gclid=CjwKCAjw-e2EBhAhEiwAJI5jg0q5XhNDg1BL4P14qMR1wqZLpCALS4sJt32USrL97_7SNQSDPV4cVxoCQigQAvD_BwE) is required in ```application.properties```.
+
 # Contributing
 In case you want to contribute to the development of this project, you will first need to fork this repository by clicking on the _Fork_ button that appears in the top right corner of this page. 
 

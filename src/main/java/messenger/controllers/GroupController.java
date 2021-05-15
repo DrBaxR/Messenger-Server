@@ -28,9 +28,6 @@ public class GroupController {
 
     private final GroupModelAssembler assembler;
 
-    @Autowired
-    private EmailService emailService;
-
     public GroupController(GroupRepository groupRepository, MessageRepository messageRepository, UserRepository userRepository, GroupModelAssembler assembler) {
         this.groupRepository = groupRepository;
         this.messageRepository = messageRepository;

@@ -36,6 +36,8 @@ public class UserController {
     private final PasswordResetRepository resetRepository;
     private final PasswordEncoder encoder;
 
+    private final String webURL = "https://messenger-web-pkfomy4bva-lm.a.run.app/";
+
     UserController(UserRepository userRepository, GroupRepository groupRepository, UserModelAssembler userAssembler, EmailService emailService, PasswordResetRepository resetRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
@@ -138,7 +140,7 @@ public class UserController {
 
         PasswordReset finalReset;
         finalReset = resetOptional.orElseGet(() -> resetRepository.save(new PasswordReset(email)));
-        Thread emailThread = new Thread(() -> emailService.sendMail(email, "Password Reset", "In order to reset your password, access the following link: http://localhost:4200/reset-password/" + finalReset.getId()));
+        Thread emailThread = new Thread(() -> emailService.sendMail(email, "Password Reset", "In order to reset your password, access the following link:\n" + webURL + "reset-password/" + finalReset.getId()));
         emailThread.start();
 
         return new ResponseEntity<>("Password reset email sent!", HttpStatus.OK);
